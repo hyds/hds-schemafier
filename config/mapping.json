@@ -1,22 +1,8 @@
 {
-
-	"validkey" : "String",
-    //validcode : String,
-    //"uppercase" : "Boolean",
-    //headlong : String,
-    //doco : String,
-    //dbname : String,
-    //fldname : String,
     "fldtype" : {
     	"C":"String",
     	"N":"Number",
     	"D":"Date",
     	"L":"Boolean"
     	},
-    //fldlen : Number,
-    //visible : Boolean,
-    //defvalue : String,
-    //allownul : Boolean,
-    //keyfld : Boolean,
-    //reserved : Boolean
 }
