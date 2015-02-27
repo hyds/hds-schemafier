@@ -23,15 +23,15 @@ function Hydstra(options) {
 util.inherits(Hydstra, Transform);
 
 Hydstra.prototype._transform = function (buf, enc, cb) {
-    fs.writeFile('../temp/buffer.json',buf.toString(),function(err){
+    fs.writeFile('buffer.json',buf.toString(),function(err){
       if (err) throw err;
       console.log("saved [buffer]");
     });  
-
+    var tables = [];
+/*
     var line = JSON.parse(buf.toString().replace(/;$/,""));
 
     var mastdict = line.return.rows;
-    var tables = [];
     
     for (table in mastdict){ 
       if (!mastdict.hasOwnProperty(table)){ continue; }
@@ -57,6 +57,7 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
   			console.log("saved ["+file+"]");
   		});
  	  }
+*/    
     
     this.push(tables.toString(), 'utf8');
 
