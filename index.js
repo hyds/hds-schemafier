@@ -26,7 +26,7 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
     
     var line = JSON.parse(buf.toString().replace(/;$/,""));
 
-    var mastdict = line._return.rows;
+    var mastdict = line.return.rows;
     var tables = [];
     
     for (table in mastdict){ 
