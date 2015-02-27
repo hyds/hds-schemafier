@@ -23,7 +23,11 @@ function Hydstra(options) {
 util.inherits(Hydstra, Transform);
 
 Hydstra.prototype._transform = function (buf, enc, cb) {
-    
+    fs.writeFile(../temp/buffer.json,buf.toString(),function(err){
+      if (err) throw err;
+      console.log("saved [buffer]");
+    });  
+
     var line = JSON.parse(buf.toString().replace(/;$/,""));
 
     var mastdict = line.return.rows;
