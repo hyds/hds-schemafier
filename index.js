@@ -68,7 +68,7 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
 		});
  	}
     
-    this.push(tables.toString()), 'utf8');
+    this.push(tables.toString(), 'utf8');
 
     cb();
 };
