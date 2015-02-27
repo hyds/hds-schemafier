@@ -4,8 +4,7 @@ var mapping = require('./config/mapping.json');
 var fs = require('fs');
 
 module.exports = {
-    hydstra : Hydstra,
-    nrmgwdb : NRMGWDB
+    hydstra : Hydstra
 } 
 
 // node v0.10+ use native Transform, else polyfill
