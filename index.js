@@ -11,8 +11,6 @@ module.exports = {
 // node v0.10+ use native Transform, else polyfill
 var Transform = stream.Transform;
 
-
-
 function Hydstra(options) {
   // allow use without new
   if (!(this instanceof Hydstra)) {
@@ -62,8 +60,7 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
  			}
  		}
 
-		var fileText = 	"module.exports = mongoose.model('"+table+"', "+table+"Schema); var mongoose = require('mongoose'),
-		"+table+"Schema = mongoose.Schema({"+JSON.stringify(schema)+"},{collection:'"+table+"'";
+		var fileText = 	"module.exports = mongoose.model('"+table+"', "+table+"Schema); var mongoose = require('mongoose'),"+table+"Schema = mongoose.Schema({"+JSON.stringify(schema)+"},{collection:'"+table+"'};";
 
 		fs.writeFile(file,fileText,function(err){
 			if (err) throw err;
