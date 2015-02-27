@@ -1,6 +1,6 @@
 {
   "name": "hds-schemafier",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "API for importing Hydstra data",
   "main": "index.js",
   "directories": {
