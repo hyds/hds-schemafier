@@ -29,30 +29,30 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
     var mastdict = line._return.rows;
     var tables = [];
     
-    for (table in mastdict){ if (!mastdict.hasOwnProperty(table)){ continue; }
+    for (table in mastdict){ 
+      if (!mastdict.hasOwnProperty(table)){ continue; }
     	tables.push(table);
 
- 		var file = './data/'+table +'.js';
- 		var schema = {};
- 		for (fieldnumber in table){
+   		var file = '/data/'+table +'.js';
+   		var schema = {};
+   		for (fieldnumber in table){
+        if (!table.hasOwnProperty(fieldnumber)){continue;} 		
+   			
+   			for (fieldname in fieldnumber){
+  	 			if (!fieldnumber.hasOwnProperty(fieldname)){continue;}
 
- 			if (!table.hasOwnProperty(fieldnumber)){continue;} 		
- 			
- 			for (fieldname in fieldname){
-	 			if (!fieldname.hasOwnProperty(fieldname)){continue;}
+  	 			schema.fieldname = 	mapping.fldtype[fieldname.fldtype];
 
-	 			schema.fieldname = 	mapping.fldtype[fieldname.fldtype];
+   			}
+   		}
 
- 			}
- 		}
+  		var fileText = 	"module.exports = mongoose.model('"+table+"', "+table+"Schema); var mongoose = require('mongoose'),"+table+"Schema = mongoose.Schema({"+JSON.stringify(schema)+"},{collection:'"+table+"'};";
 
-		var fileText = 	"module.exports = mongoose.model('"+table+"', "+table+"Schema); var mongoose = require('mongoose'),"+table+"Schema = mongoose.Schema({"+JSON.stringify(schema)+"},{collection:'"+table+"'};";
-
-		fs.writeFile(file,fileText,function(err){
-			if (err) throw err;
-			console.log("saved ["+file+"]");
-		});
- 	}
+  		fs.writeFile(file,fileText,function(err){
+  			if (err) throw err;
+  			console.log("saved ["+file+"]");
+  		});
+ 	  }
     
     this.push(tables.toString(), 'utf8');
 
