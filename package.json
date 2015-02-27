@@ -1,6 +1,6 @@
 {
   "name": "hydstra-import-service",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "API for importing Hydstra data",
   "main": "index.js",
   "directories": {
