@@ -48,11 +48,21 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
     for (table in mastdict){
       if (!mastdict.hasOwnProperty(table)){ continue; }
       var tableDefinition = mastdict[table];
-      tables.push(table);
-      var schemaFile = './data/'+table +'.js';
+
+      var lcTable = table.toLowerCase();
+      var ucfTable = lcTable.charAt(0).toUpperCase() + lcTable.substr(1);
+
+      tables.push(lcTable);
+      var schemaFile = './data/'+lcTable +'.js';
       var schema = {};
 
-      var definitionFile = './data/'+table +'.json';
+      if ( 'undefined' !== typeof (mapping.dataModel[lcTable]) ){
+        var parent = mapping.dataModel[lcTable];
+        var ucfParent = parent.charAt(0).toUpperCase() + parent.substr(1);
+        schema.parent =  ucfParent;
+      }
+
+      var definitionFile = './data/'+lcTable +'.json';
       fs.writeFile(definitionFile,JSON.stringify(tableDefinition),function(err){
         if (err) throw err;
         console.log("saved ["+definitionFile+"]");
@@ -67,24 +77,26 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
           if (!field.hasOwnProperty(fieldname)){continue;}
           var fieldDefinition = field[fieldname];
 
-          var fldtype = fieldDefinition.fldtype;
-          fldtype.toLowerCase();
+          var lcFieldname = fieldname.toLowerCase();
+          var fldtype = fieldDefinition.fldtype.toLowerCase();
+          //fldtype.toLowerCase();
+
           console.log("fieldname [",fieldname,"]");
           console.log("fldtype ["+fldtype+"]");
+          var typeMapping = mapping.fldtype[fldtype];
+          console.log("fldtype mapping ["+typeMapping+"]");
   	 			var schemaType = {};
-          schemaType[type] = mapping.fldtype[fldtype];
-          schemaType[key] = fieldDefinition[keyfld];
-
-          schemaType[uppercase] = fieldDefinition.uppercase.toLowerCase();
-
-          schema[fieldname] = schemaType;
-
+          schemaType['type'] = typeMapping;
+          schemaType.key = fieldDefinition.keyfld;
+          schemaType.uppercase = fieldDefinition.uppercase;
+          schema[lcFieldname] = schemaType;
+          var lcTable = table.toLowerCase();
 
    			}
    		}
 
+      var fileText = 	"module.exports = mongoose.model('"+ucfTable+"', "+lcTable+"Schema); var mongoose = require('mongoose'),"+lcTable+"Schema = mongoose.Schema("+JSON.stringify(schema)+",{collection:'"+ucfTable+"'};";
 
-      var fileText = 	"module.exports = mongoose.model('"+table+"', "+table+"Schema); var mongoose = require('mongoose'),"+table+"Schema = mongoose.Schema("+JSON.stringify(schema)+",{collection:'"+table+"'};";
       fs.writeFile(schemaFile,fileText,function(err){
         if (err) throw err;
         console.log("saved ["+schemaFile+"]");
