@@ -91,7 +91,7 @@ function schemaGen(mastdict){
         }
       }
     }
-    return schema;
+    return schemas;
 }
 
 
