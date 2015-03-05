@@ -62,6 +62,8 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
         schema.parent =  ucfParent;
       }
 
+      schema.lastupdate = { type: Date, default: Date.now };
+
       var definitionFile = './data/'+lcTable +'.json';
       fs.writeFile(definitionFile,JSON.stringify(tableDefinition),function(err){
         if (err) throw err;
