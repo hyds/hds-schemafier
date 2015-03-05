@@ -54,9 +54,9 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
       var ucfTable = lcTable.charAt(0).toUpperCase() + lcTable.substr(1);
 
       tables.push(lcTable);
-      var schemaFile = './data/'+lcTable +'.js';
+      //var schemaFile = './data/'+lcTable +'.js';
       var schema = schemaTemplate;
-
+      schema.collection = ucfTable;
 
       if ( 'undefined' !== typeof (mapping.dataModel[lcTable]) ){
         var parent = mapping.dataModel[lcTable];
@@ -64,13 +64,6 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
         schema.parent =  ucfParent;
       }
 
-      schema.lastupdate = { type: Date, default: Date.now };
-
-      var definitionFile = './data/'+lcTable +'.json';
-      fs.writeFile(definitionFile,JSON.stringify(tableDefinition),function(err){
-        if (err) throw err;
-        console.log("saved ["+definitionFile+"]");
-      });
 
       for (fieldnumber in tableDefinition){
 
@@ -95,13 +88,20 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
 
    			}
    		}
-
-      var fileText = 	"module.exports = mongoose.model('"+ucfTable+"', "+lcTable+"Schema); var mongoose = require('mongoose'),"+lcTable+"Schema = mongoose.Schema("+JSON.stringify(schema)+",{collection:'"+ucfTable+"'};";
-
-      fs.writeFile(schemaFile,fileText,function(err){
+      
+      var definitionFile = './db/model/'+lcTable +'.json';
+      fs.writeFile(definitionFile,JSON.stringify(schema),function(err){
         if (err) throw err;
-        console.log("saved ["+schemaFile+"]");
-      });
+        console.log("saved ["+definitionFile+"]");
+      });  
+
+
+      //var fileText = 	"module.exports = mongoose.model('"+ucfTable+"', "+lcTable+"Schema); var mongoose = require('mongoose'),"+lcTable+"Schema = mongoose.Schema("+JSON.stringify(schema)+",{collection:'"+ucfTable+"'};";
+
+      //fs.writeFile(schemaFile,fileText,function(err){
+      //  if (err) throw err;
+      //  console.log("saved ["+schemaFile+"]");
+      //});
  	  }
     this.push(tables.toString(), 'utf8');
 

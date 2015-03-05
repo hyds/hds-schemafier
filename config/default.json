@@ -1,0 +1,6 @@
+{
+	"agency":"String",
+	"vendor":"String",
+	"origin":"String",
+	"lastupdate" : {type: "Date", default: "Date.now"};
+}
