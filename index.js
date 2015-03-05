@@ -97,9 +97,9 @@ function processTableDefinition (tableDefinition) {
       schemaType.key = fieldDefinition.keyfld;
       schemaType.uppercase = fieldDefinition.uppercase;
       //schemas[lcTable][lcFieldname] = schemaType;
+      
       var definitionFile = './schemas/schemaType'+ table +'.json';
-
-      fs.writeFile(definitionFile,JSON.stringify(schemas[table]),function(err){
+      fs.writeFile(definitionFile,JSON.stringify(schemaType),function(err){
         if (err) throw err;
         console.log("saved ["+definitionFile+"]");
       });
