@@ -1,6 +1,7 @@
 var stream = require('stream');
 var util = require('util');
 var mapping = require('./config/mapping.json');
+var schemaTemplate = require('./config/template.json');
 var fs = require('fs');
 
 module.exports = {
@@ -54,7 +55,8 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
 
       tables.push(lcTable);
       var schemaFile = './data/'+lcTable +'.js';
-      var schema = {};
+      var schema = schemaTemplate;
+
 
       if ( 'undefined' !== typeof (mapping.dataModel[lcTable]) ){
         var parent = mapping.dataModel[lcTable];
@@ -80,14 +82,11 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
           var fieldDefinition = field[fieldname];
 
           var lcFieldname = fieldname.toLowerCase();
-          var fldtype = fieldDefinition.fldtype.toLowerCase();
+          var fldtype = fieldDefinition.fldtype.toUpperCase();
           //fldtype.toLowerCase();
 
-          console.log("fieldname [",fieldname,"]");
-          console.log("fldtype ["+fldtype+"]");
           var typeMapping = mapping.fldtype[fldtype];
-          console.log("fldtype mapping ["+typeMapping+"]");
-  	 			var schemaType = {};
+          var schemaType = {};
           schemaType['type'] = typeMapping;
           schemaType.key = fieldDefinition.keyfld;
           schemaType.uppercase = fieldDefinition.uppercase;
@@ -103,13 +102,7 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
         if (err) throw err;
         console.log("saved ["+schemaFile+"]");
       });
-
-
-      //console.log("saved ["+table+"]");
-
  	  }
-
-
     this.push(tables.toString(), 'utf8');
 
     cb();
