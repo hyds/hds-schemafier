@@ -89,7 +89,7 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
    			}
    		}
       
-      var definitionFile = './db/model/'+lcTable +'.json';
+      var definitionFile = './schemas/'+lcTable +'.json';
       fs.writeFile(definitionFile,JSON.stringify(schema),function(err){
         if (err) throw err;
         console.log("saved ["+definitionFile+"]");

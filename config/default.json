@@ -1,6 +1,6 @@
 {
-	"agency":"String",
-	"vendor":"String",
-	"origin":"String",
-	"lastupdate" : {type: "Date", default: "Date.now"};
+	"agency":{"type":"String", "key":true},
+	"vendor":{"type":"String", "key":true},
+	"origin":{"type":"String", "key":true},
+	"lastupdate" : {"type": "Date", "default": "Date.now"}
 }
