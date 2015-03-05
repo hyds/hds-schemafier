@@ -1,21 +1,21 @@
 {
   "name": "hds-schemafier",
   "version": "1.0.27",
-  "description": "API for importing Hydstra data",
+  "description": "Service to turn data model into json and map to a consistend schema",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com:hyds/hydstra-import-service.git"
+    "url": "git://github.com:hyds/hds-schemafier.git"
   },
   "scripts": {
     "test": "node ./tests"
   },
   "author": "Sholto Maud <Sholto.maud@gmail.com>",
   "bugs": {
-    "url": "https://github.com/hyds/hydstra-import-service.git"
+    "url": "https://github.com/hyds/hds-schemafier.git"
   },
   "license": "MIT",
   "devDependencies": {
@@ -32,7 +32,7 @@
     "through": "^2.3.6",
     "util": "^0.10.3"
   },
-  "homepage": "https://github.com/hyds/hydstra-import-service",
+  "homepage": "https://github.com/hyds/hds-schemafier.git",
   "keywords": [
     "hydstra"
   ]
