@@ -47,7 +47,6 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
     var retrn = line[ret];
     var mastdict = retrn.rows;
 
-    
     tables = writeSchemas(schemaGen(mastdict));
     this.push(tables.toString(), 'utf8');
 
@@ -100,7 +99,7 @@ function writeSchemas(schemas){
   for (table in schemas){
     if (!schemas.hasOwnProperty(table)){ continue; }
     
-    var definitionFile = './schemas/'+schemas.table +'.json';
+    var definitionFile = './schemas/'+ table +'.json';
     
     fs.writeFile(definitionFile,JSON.stringify(schemas[table]),function(err){
       if (err) throw err;
