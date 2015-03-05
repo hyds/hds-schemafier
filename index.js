@@ -3,7 +3,7 @@ var util = require('util');
 var mapping = require('./config/mapping.json');
 var schemaTemplate = require('./config/template.json');
 var fs = require('fs');
-var schemas = {};
+
 
 module.exports = {
     hydstra : Hydstra
@@ -54,43 +54,58 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
 };
 
 function schemaGen(mastdict){
+  var schemas = {};
   for (table in mastdict){
-      if (!mastdict.hasOwnProperty(table)){ continue; }
-      var tableDefinition = mastdict[table];
+    if (!mastdict.hasOwnProperty(table)){ continue; }
+    var tableDefinition = mastdict[table];
 
-      var lcTable = table.toLowerCase();
-      var ucfTable = lcTable.charAt(0).toUpperCase() + lcTable.substr(1);
+    var lcTable = table.toLowerCase();
+    var ucfTable = lcTable.charAt(0).toUpperCase() + lcTable.substr(1);
 
-      schemas[lcTable] = schemaTemplate;
-      schemas[lcTable].collection = ucfTable;
+    schemas[lcTable] = schemaTemplate;
+    schemas[lcTable].collection = ucfTable;
 
-      if ( 'undefined' !== typeof (mapping.dataModel[lcTable]) ){
-        var parent = mapping.dataModel[lcTable];
-        var ucfParent = parent.charAt(0).toUpperCase() + parent.substr(1);
-        schemas[lcTable].parent = ucfParent;
-      }
-
-      for (fieldnumber in tableDefinition){
-
-        if (!tableDefinition.hasOwnProperty(fieldnumber)){continue;}
-        var field = tableDefinition[fieldnumber];
-
-        for (fieldname in field ){
-          if (!field.hasOwnProperty(fieldname)){continue;}
-          var schemaType = {};
-          var fieldDefinition = field[fieldname];
-          var lcFieldname = fieldname.toLowerCase();
-          var fldtype = fieldDefinition.fldtype.toUpperCase();
-          var typeMapping = mapping.fldtype[fldtype];
-          
-          schemaType['type'] = typeMapping;
-          schemaType.key = fieldDefinition.keyfld;
-          schemaType.uppercase = fieldDefinition.uppercase;
-          schemas[lcTable][lcFieldname] = schemaType;
-        }
-      }
+    if ( 'undefined' !== typeof (mapping.dataModel[lcTable]) ){
+      var parent = mapping.dataModel[lcTable];
+      var ucfParent = parent.charAt(0).toUpperCase() + parent.substr(1);
+      schemas[lcTable].parent = ucfParent;
     }
-    return schemas;
+
+    var tableDef = processTableDefinition(tableDefinition);  
+    schemas[lcTable] = schemas[lcTable][tableDef];
+
+  }
+  return schemas;
+}
+
+function processTableDefinition (tableDefinition) {
+  var tableDef = {};
+  for (fieldnumber in tableDefinition){
+
+    if (!tableDefinition.hasOwnProperty(fieldnumber)){continue;}
+    var field = tableDefinition[fieldnumber];
+
+    for (fieldname in field ){
+      if (!field.hasOwnProperty(fieldname)){continue;}
+      var schemaType = {};
+      var fieldDefinition = field[fieldname];
+      var lcFieldname = fieldname.toLowerCase();
+      var fldtype = fieldDefinition.fldtype.toUpperCase();
+      var typeMapping = mapping.fldtype[fldtype];
+      
+      schemaType['type'] = typeMapping;
+      schemaType.key = fieldDefinition.keyfld;
+      schemaType.uppercase = fieldDefinition.uppercase;
+      schemas[lcTable][lcFieldname] = schemaType;
+      var definitionFile = './schemas/schemaType'+ table +'.json';
+
+      fs.writeFile(definitionFile,JSON.stringify(schemas[table]),function(err){
+        if (err) throw err;
+        console.log("saved ["+definitionFile+"]");
+      });
+    }
+  }
+  return tableDef;  
 }
 
 
