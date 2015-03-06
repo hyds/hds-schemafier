@@ -55,6 +55,7 @@ Hydstra.prototype._transform = function (buf, enc, cb) {
 
 function schemaGen(mastdict){
   var schemas = {};
+
   for (table in mastdict){
     if (!mastdict.hasOwnProperty(table)){ continue; }
     var tableDefinition = mastdict[table];
@@ -62,17 +63,23 @@ function schemaGen(mastdict){
     var lcTable = table.toLowerCase();
     var ucfTable = lcTable.charAt(0).toUpperCase() + lcTable.substr(1);
 
-    schemas[lcTable] = schemaTemplate;
+    schemas[lcTable] = processTableDefinition(tableDefinition);
     schemas[lcTable].collection = ucfTable;
 
     if ( 'undefined' !== typeof (mapping.dataModel[lcTable]) ){
+
+      console.log("table [" ,lcTable,"], model [",mapping.dataModel[lcTable],"]");
       var parent = mapping.dataModel[lcTable];
       var ucfParent = parent.charAt(0).toUpperCase() + parent.substr(1);
-      schemas[lcTable].parent = ucfParent;
+      schemas[lcTable]['parent'] = ucfParent;
     }
 
-    var tableDef = processTableDefinition(tableDefinition);  
-    schemas[lcTable] = schemas[lcTable][tableDef];
+
+
+    for (field in schemaTemplate ){
+      if (!schemaTemplate.hasOwnProperty(field)){continue;}
+      schemas[lcTable][field] = schemaTemplate[field];
+    }
 
   }
   return schemas;
@@ -92,20 +99,15 @@ function processTableDefinition (tableDefinition) {
       var lcFieldname = fieldname.toLowerCase();
       var fldtype = fieldDefinition.fldtype.toUpperCase();
       var typeMapping = mapping.fldtype[fldtype];
-      
+
       schemaType['type'] = typeMapping;
       schemaType.key = fieldDefinition.keyfld;
       schemaType.uppercase = fieldDefinition.uppercase;
-      //schemas[lcTable][lcFieldname] = schemaType;
-      
-      var definitionFile = './schemas/schemaType'+ table +'.json';
-      fs.writeFile(definitionFile,JSON.stringify(schemaType),function(err){
-        if (err) throw err;
-        console.log("saved ["+definitionFile+"]");
-      });
+      tableDef[lcFieldname] = schemaType;
     }
   }
-  return tableDef;  
+
+  return tableDef;
 }
 
 
@@ -113,14 +115,14 @@ function writeSchemas(schemas){
   var tables = [];
   for (table in schemas){
     if (!schemas.hasOwnProperty(table)){ continue; }
-    
+
     var definitionFile = './schemas/'+ table +'.json';
-    
+
     fs.writeFile(definitionFile,JSON.stringify(schemas[table]),function(err){
       if (err) throw err;
       console.log("saved ["+definitionFile+"]");
     });
-    tables.push(table);  
+    tables.push(table);
   }
   return tables;
 }
