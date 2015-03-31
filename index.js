@@ -4,15 +4,45 @@ var mapping = require('./config/mapping.json');
 var schemaTemplate = require('./config/template.json');
 var fs = require('fs');
 
+var through = require('through2');
+var duplexer = require('duplexer');
+var split = require('split');
 
 module.exports = {
     hydstra : Hydstra
 }
 
+
+function Hydstra(data){
+  var input = through(write,end);
+  //return duplexer(input,data);
+
+  var tables = [];
+
+  function write(buf, enc, next){
+    //this.queue(buf);
+    var line = JSON.parse(buf.toString().replace(/;$/g,""));
+    var mastdict = fixReturn(line);
+    //data.tables = writeSchemas(schemaGen(mastdict));
+    tables = writeSchemas(schemaGen(mastdict));
+    next();
+  }
+
+  function end(cb){
+    this.push(tables.toString(), 'utf8');
+    //this.queue(null);
+    cb();
+  }
+
+}
+
+
+
+
 // node v0.10+ use native Transform, else polyfill
 var Transform = stream.Transform;
 
-function Hydstra(options) {
+function Hydstra2(options) {
   // allow use without new
   if (!(this instanceof Hydstra)) {
     return new Hydstra(options);
@@ -22,36 +52,29 @@ function Hydstra(options) {
   Transform.call(this, options);
 }
 
-util.inherits(Hydstra, Transform);
+util.inherits(Hydstra2, Transform);
 
-Hydstra.prototype._transform = function (buf, enc, cb) {
+Hydstra2.prototype._transform = function (buf, enc, cb) {
+
+    /*
+    fs.writeFile('./data/dump.json',buf.toString(), function(err){
+      if (err) throw err;
+      console.log('saved\n');
+    });
+    */
+
+    var tables = [];
 
     var line = JSON.parse(buf.toString().replace(/;$/g,""));
-    var tables = [];
-    var ret;
 
-    // return key not consistent from Hydstra webservice between agencies!!!
-    // It's an outrage sir!!!
-    for (objKey in line){
-      if (!line.hasOwnProperty(objKey)){ continue; }
-      switch (objKey){
-        case 'return':
-         ret = 'return';
-         break;
-        case '_return':
-         ret = '_return';
-         break;
-      }
-    }
-
-    var retrn = line[ret];
-    var mastdict = retrn.rows;
-
+    var mastdict = fixReturn(line);
     tables = writeSchemas(schemaGen(mastdict));
     this.push(tables.toString(), 'utf8');
 
     cb();
 };
+
+
 
 function schemaGen(mastdict){
   var schemas = {};
@@ -116,13 +139,37 @@ function writeSchemas(schemas){
   for (table in schemas){
     if (!schemas.hasOwnProperty(table)){ continue; }
 
-    var definitionFile = './schemas/'+ table +'.json';
+    var definitionFile = './db/schemas/'+ table +'.json';
 
     fs.writeFile(definitionFile,JSON.stringify(schemas[table]),function(err){
       if (err) throw err;
       console.log("saved ["+definitionFile+"]");
     });
+
     tables.push(table);
   }
   return tables;
+}
+
+
+function fixReturn( line ){
+  var ret;
+
+  // return key not consistent from Hydstra webservice between agencies!!!
+  // It's an outrage sir!!!
+  for (objKey in line){
+    if (!line.hasOwnProperty(objKey)){ continue; }
+    switch (objKey){
+      case 'return':
+       ret = 'return';
+       break;
+      case '_return':
+       ret = '_return';
+       break;
+    }
+  }
+
+  var retrn = line[ret];
+
+  return retrn.rows;
 }
