@@ -1,6 +1,6 @@
 {
   "name": "hds-schemafier",
-  "version": "1.0.30",
+  "version": "1.0.31",
   "description": "Service to turn data model into json and map to a consistend schema",
   "main": "index.js",
   "directories": {
@@ -35,6 +35,7 @@
   },
   "homepage": "https://github.com/hyds/hds-schemafier.git",
   "keywords": [
-    "hydstra", "Queensland Groundwater Database"
+    "hydstra",
+    "Queensland Groundwater Database"
   ]
 }
