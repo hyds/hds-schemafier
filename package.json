@@ -1,6 +1,6 @@
 {
   "name": "hds-schemafier",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "description": "Service to turn data model into json and map to a consistend schema",
   "main": "index.js",
   "directories": {
