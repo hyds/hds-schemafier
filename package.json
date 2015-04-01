@@ -30,6 +30,7 @@
     "request": "^2.53.0",
     "stream": "0.0.2",
     "through": "^2.3.6",
+    "through2": "^0.6.3",
     "util": "^0.10.3"
   },
   "homepage": "https://github.com/hyds/hds-schemafier.git",
