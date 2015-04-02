@@ -3,7 +3,7 @@ var tools = require('./tools');
 
 module.exports = function(){
   var tables = [];
-  return through(function write(data, _, next) {
+  return through(function write(buffer, _, next) {
     var string = buffer.toString().replace(/;$/g,"");
     console.log(string);
     try { var line = JSON.parse(string) }  
