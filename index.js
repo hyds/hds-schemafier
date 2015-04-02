@@ -27,7 +27,6 @@ module.exports = function(){
   },
   function end(cb){
     this.push(tables.toString(), 'utf8');
-    this.queue(null);
     cb();
   })
 }
