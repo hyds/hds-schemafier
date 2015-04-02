@@ -6,7 +6,6 @@ module.exports = function (schemas){
     if (!schemas.hasOwnProperty(table)){ continue; }
 
     var definitionFile = '../db/schemas/'+ table +'.json';
-    fs.unlinkSync(definitionFile);
     fs.writeFile(definitionFile,JSON.stringify(schemas[table]),function(err){
       if (err) throw err;
       console.log("saved ["+definitionFile+"]");
