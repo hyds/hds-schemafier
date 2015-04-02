@@ -1,5 +1,5 @@
 var through = require('through2');
-var tools = require('tools');
+var tools = require('./tools');
 
 module.exports = function(){
   var tables = [];
