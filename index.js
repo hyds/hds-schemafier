@@ -8,8 +8,29 @@ var through = require('through2');
 var duplexer = require('duplexer');
 var split = require('split');
 
+/*
 module.exports = {
     hydstra : Hydstra
+}
+*/
+
+module.exports = function(){
+  var tables = [];
+  return through(function write(data) {
+    try { var line = JSON.parse(data.toString().replace(/;$/g,"")) }  
+    catch (err){ return this.emit('error',err) }
+    console.log(line);
+    var mastdict = fixReturn(line);
+    //data.tables = writeSchemas(schemaGen(mastdict));
+    tables = writeSchemas(schemaGen(mastdict));
+    next();
+  },
+  function end(cb){
+    this.push(tables.toString(), 'utf8');
+    this.queue(null);
+    cb();
+  })
+
 }
 
 
