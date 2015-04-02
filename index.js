@@ -16,7 +16,7 @@ module.exports = {
 
 module.exports = function(){
   var tables = [];
-  return through(function write(data) {
+  return through(function write(data, _, next) {
     try { var line = JSON.parse(data.toString().replace(/;$/g,"")) }  
     catch (err){ return this.emit('error',err) }
     console.log(line);
@@ -30,7 +30,6 @@ module.exports = function(){
     this.queue(null);
     cb();
   })
-
 }
 
 
